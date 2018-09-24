@@ -28,6 +28,7 @@ import withRipple from '@material/react-ripple';
 export class Button extends Component {
   render() {
     const {
+      component,
       className,
       raised,
       unelevated,
@@ -47,7 +48,7 @@ export class Button extends Component {
       'mdc-button--dense': dense,
     });
 
-    const SemanticButton = this.props.href ? 'a' : 'button';
+    const SemanticButton = component ? component : (this.props.href ? 'a' : 'button');
 
     return (
       <SemanticButton

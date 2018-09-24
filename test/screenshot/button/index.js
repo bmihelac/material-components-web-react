@@ -1,5 +1,6 @@
 import React from 'react';
 import MaterialIcon from '../../../packages/material-icon/index';
+import {Link} from 'react-router-dom';
 import '../../../packages/button/index.scss';
 import './index.scss';
 
@@ -18,6 +19,29 @@ const svgIcon = (<svg
   2c-1.55 1.25-3.51 2-5.64 2s-4.1-.75-5.64-2h11.28zM21 12c0 2.14-.75
   4.1-2 5.64V6.37c1.24 1.55 2 3.5 2 5.63z"/>
 </svg>);
+
+
+class ReactRouterLink extends React.Component {
+
+  init = (el) => {
+    this.props.initRipple(this.innerRef);
+  }
+
+  render() {
+    const {
+      initRipple,
+      ...props
+    } = this.props;
+    return (
+      <Link ref={this.init} innerRef={( node ) => this.innerRef=node} {...props}/>
+    );
+  }
+};
+
+const LinkButton = React.forwardRef(
+  (props, ref) => <ReactRouterLink initRipple={ref} {...props} />
+);
+
 
 const ButtonScreenshotTest = () => {
   return (
@@ -59,6 +83,10 @@ const ButtonScreenshotTest = () => {
           icon={svgIcon}>
           Svg Icon
         </Button>
+      </div>
+
+      <div>
+        <Button component={LinkButton} to="/">React router Link</Button>
       </div>
     </div>
   );
