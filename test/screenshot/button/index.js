@@ -1,10 +1,11 @@
 import React from 'react';
 import MaterialIcon from '../../../packages/material-icon/index';
 import {Link} from 'react-router-dom';
+import withRipple from '../../../packages/ripple/index';
+import Button, {ButtonBase} from '../../../packages/button/index';
 import '../../../packages/button/index.scss';
 import './index.scss';
 
-import Button from '../../../packages/button/index';
 const svgIcon = (<svg
   width="24px" height="24px"
   xmlns="http://www.w3.org/2000/svg"
@@ -22,30 +23,28 @@ const svgIcon = (<svg
 
 
 class ReactRouterLink extends React.Component {
-
-  init = (el) => {
-    this.props.initRipple(this.innerRef);
+  init = (node) => {
+    this.props.initRipple(node)
   }
 
   render() {
-    const {
-      initRipple,
-      ...props
-    } = this.props;
+    const {rippleActivator, initRipple, ...props} = this.props;
     return (
-      <Link ref={this.init} innerRef={( node ) => this.innerRef=node} {...props}/>
+      <Link innerRef={this.init} {...props} />
     );
   }
 };
 
-const LinkButton = React.forwardRef(
-  (props, ref) => <ReactRouterLink initRipple={ref} {...props} />
-);
-
+const ReactRouterButton = withRipple((props) => {
+  return (
+    <ButtonBase linkComponent={ReactRouterLink} {...props} />
+  );
+});
 
 const ButtonScreenshotTest = () => {
   return (
     <div>
+
       <div className='button-container'>
         <Button>Click</Button>
       </div>
@@ -86,7 +85,7 @@ const ButtonScreenshotTest = () => {
       </div>
 
       <div>
-        <Button component={LinkButton} to="/">React router Link</Button>
+        <ReactRouterButton to="/">React router Link</ReactRouterButton>
       </div>
     </div>
   );

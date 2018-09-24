@@ -25,10 +25,18 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import withRipple from '@material/react-ripple';
 
-export class Button extends Component {
+export class ButtonBase extends Component {
+  rippleActivator = React.createRef();
+
+  init = (el) => {
+    if (this.rippleActivator.current) {
+      this.props.initRipple(this.rippleActivator.current);
+    }
+  }
+
   render() {
     const {
-      component,
+      linkComponent,
       className,
       raised,
       unelevated,
@@ -36,7 +44,7 @@ export class Button extends Component {
       dense,
       icon,
       children,
-      initRipple,
+      initRipple, // eslint-disable-line no-unused-vars
       unbounded, // eslint-disable-line no-unused-vars
       ...otherProps
     } = this.props;
@@ -48,17 +56,19 @@ export class Button extends Component {
       'mdc-button--dense': dense,
     });
 
-    const SemanticButton = component ? component : (this.props.href ? 'a' : 'button');
+    const LinkComponent = linkComponent;
 
     return (
-      <SemanticButton
+      <LinkComponent
         className={classes}
-        ref={initRipple}
+        rippleActivator={this.rippleActivator}
+        initRipple={initRipple}
+        ref={this.init}
         {...otherProps}
       >
         {icon ? this.renderIcon() : null}
         {children}
-      </SemanticButton>
+      </LinkComponent>
     );
   }
 
@@ -75,7 +85,28 @@ export class Button extends Component {
   }
 }
 
-Button.propTypes = {
+class SemanticButtonInner extends React.Component {
+  render() {
+    const {rippleActivator, ...props} = this.props;
+    const SemanticButton = (props.href) ? 'a' : 'button';
+    return (
+      <SemanticButton ref={rippleActivator} {...props} />
+    );
+  }
+};
+
+export const Button = (props) => {
+  return (
+    <ButtonBase linkComponent={SemanticButtonInner} {...props} />
+  );
+};
+
+SemanticButtonInner.propTypes = {
+  rippleActivator: PropTypes.any,
+};
+
+ButtonBase.propTypes = {
+  linkComponent: PropTypes.node,
   raised: PropTypes.bool,
   unelevated: PropTypes.bool,
   outlined: PropTypes.bool,
@@ -89,7 +120,7 @@ Button.propTypes = {
   children: PropTypes.string,
 };
 
-Button.defaultProps = {
+ButtonBase.defaultProps = {
   raised: false,
   unelevated: false,
   outlined: false,
