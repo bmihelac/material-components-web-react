@@ -26,6 +26,15 @@ class TabsController extends React.Component {
     } = this.props;
     const {activeIndex, previousActiveIndex} = this.state;
     return (
+      <div>
+        <div>
+        <button onClick={() => {
+          this.setState({
+            previousActiveIndex: activeIndex,
+            activeIndex: -1,
+          });
+        }}>Reset</button>
+        </div>
       <Tabs activeIndex={activeIndex}>
         {[1, 2, 3].map((num, index) => (
           <Tab
@@ -47,6 +56,7 @@ class TabsController extends React.Component {
           </Tab>
         ))}
       </Tabs>
+    </div>
     );
   }
 };
